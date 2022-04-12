@@ -1,22 +1,36 @@
 import socket
 
 HOST = "127.0.0.1"  # (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+PORT_TO_LISTEN = 65010
+PORTS = [64000, 64001, 64002]
 
-values = [30, 10, 15]
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    # Internet, TCP
+server_sockets = []
+for port in PORTS:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((HOST, port))
+    server_sockets.append(s)
 
-    s.bind((HOST, PORT))
-    
+listen_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+listen_sock.bind((HOST, PORT_TO_LISTEN))
+
+while True:
     # Wait for client
-    s.listen()
-    conn, addr = s.accept()
-    with conn:
-        print(f"Connected by {addr}")
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            conn.sendall(str(values).encode("utf-8"))
+    listen_sock.listen()
+    conn, addr = listen_sock.accept()
+    print(f"Connected by {addr}")
+
+    while(True):
+        data = conn.recv(1024)
+        if not data:
+            break
+        
+        data = eval(data)
+        print(f"Received request {data}")
+        if data in range(len(server_sockets)):
+            server_sockets[data].sendall("give it to me".encode("utf-8"))
+
+            response = server_sockets[data].recv(1024)
+            temperature = eval(response)
+        
+            conn.sendall(str(temperature).encode("utf-8"))

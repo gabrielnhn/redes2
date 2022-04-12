@@ -3,7 +3,7 @@ import socket
 import os
 
 HOST = "127.0.0.1"
-PORTS = [65000, 65001, 65002]
+PORTS = [64000, 64001, 64002]
 
 def get_temperature(weather):
     if weather == "hot":
