@@ -1,3 +1,10 @@
+"""
+Esse programa faz parte do Trabalho de Redes de Computadores II 
+"""
+__author__ = "Gabriel Hishida and Allan Cedric"
+
+
+
 import random
 import socket
 import os

@@ -1,3 +1,8 @@
+"""
+Esse programa faz parte do Trabalho de Redes de Computadores II 
+"""
+__author__ = "Gabriel Hishida and Allan Cedric"
+
 import socket
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
