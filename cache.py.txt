@@ -32,10 +32,31 @@ while True:
         
         data = eval(data)
         print(f"Received request {data}")
-        if data in range(len(server_sockets)):
-            server_sockets[data].sendall("give it to me".encode("utf-8"))
 
-            response = server_sockets[data].recv(1024)
-            temperature = eval(response)
+
+        if data in range(len(server_sockets)):
+
+            try:
+                server_sockets[data].sendall(f"Request temperature from server {data}".encode("utf-8"))
+            except BrokenPipeError:
+                conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
+            
+            server_sockets[data].settimeout(1.0)
+            
+            try:
+                response = server_sockets[data].recv(1024)
+
+                if response:
+                    temperature = eval(response)
+                    conn.sendall(str(temperature).encode("utf-8"))
+                else:
+                    conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
+
+            except socket.timeout:
+                conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
         
-            conn.sendall(str(temperature).encode("utf-8"))
+        else:
+            print(f"Requested server {data} does not exist")
+            conn.sendall(f"err: Server {data} does not exist".encode("utf-8"))
+
+

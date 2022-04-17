@@ -50,6 +50,12 @@ if __name__ == "__main__":
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
+                data = data.decode("utf-8")
                 if not data:
+                    print("No connection. Finishing...")
                     break
-                conn.sendall(str(get_temperature(weather)).encode("utf-8"))
+
+                print(f"Received request {data}")
+                response = str(get_temperature(weather))
+                print(f"Sending response {response}")
+                conn.sendall(response.encode("utf-8"))

@@ -6,7 +6,6 @@ __author__ = "Gabriel Hishida and Allan Cedric"
 import socket
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
-# PORT = 65432  # The port used by the server cache
 PORT = 65010  # The port used by the server cache
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -23,8 +22,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         try:
             data = s.recv(1024)
-            data = eval(data)
+            data = data.decode("utf-8")
 
-            print(f"Cache: {data}")
+            if data and (not data.startswith("err:")):
+                data = eval(data)
+                print(f"{req}: {data}")
+            
+            else:
+                print(data)
+
         except socket.timeout:
-            print("No data was received.")
+            print("No data was received from cache.")
