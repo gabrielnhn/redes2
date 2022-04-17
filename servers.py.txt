@@ -47,7 +47,7 @@ if __name__ == "__main__":
         s.listen()
         conn, addr = s.accept()
         with conn:
-            print(f"Connected by {addr}")
+            print(f"Server {PORT} connected to CACHE on {addr}")
             while True:
                 data = conn.recv(1024)
                 data = data.decode("utf-8")

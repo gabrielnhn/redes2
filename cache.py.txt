@@ -13,8 +13,14 @@ PORTS = [64000, 64001, 64002]
 server_sockets = []
 for port in PORTS:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((HOST, port))
-    server_sockets.append(s)
+    try:
+        s.connect((HOST, port))
+        server_sockets.append(s)
+    
+    except ConnectionRefusedError: 
+        print(f"Error: Could not connect to server {PORTS.index(port)}")
+        exit()
+
 
 listen_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listen_sock.bind((HOST, PORT_TO_LISTEN))
@@ -23,7 +29,7 @@ while True:
     # Wait for client
     listen_sock.listen()
     conn, addr = listen_sock.accept()
-    print(f"Connected by {addr}")
+    print(f"Connected to CLIENT by {addr}")
 
     while(True):
         data = conn.recv(1024)
