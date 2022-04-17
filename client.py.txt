@@ -15,11 +15,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while(True):
         req = input(">>>")
 
-        # data = b"{req}"
         data = req.encode('UTF-8')
 
         s.sendall(data)
-        data = s.recv(1024)
-        data = eval(data)
 
-        print(f"Cache: {data}")
+        s.settimeout(1.0)
+
+        try:
+            data = s.recv(1024)
+            data = eval(data)
+
+            print(f"Cache: {data}")
+        except socket.timeout:
+            print("No data was received.")
