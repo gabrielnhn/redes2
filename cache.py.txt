@@ -36,14 +36,19 @@ while True:
         if not data:
             break
         
-        data = eval(data)
-        print(f"Received request {data}")
 
+        try:
+            data = eval(data)
+            print(f"Received request {data}")
+
+        except:
+            pass
+        
 
         if data in range(len(server_sockets)):
 
             try:
-                server_sockets[data].sendall(f"Request temperature from server {data}".encode("utf-8"))
+                server_sockets[data].sendall(f"temperature from server {data}".encode("utf-8"))
             except BrokenPipeError:
                 conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
             

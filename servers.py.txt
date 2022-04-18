@@ -47,7 +47,7 @@ if __name__ == "__main__":
         s.listen()
         conn, addr = s.accept()
         with conn:
-            print(f"Server {PORT} connected to CACHE on {addr}")
+            print(f"Server {PORT} connected to CACHE on socket {addr}")
             while True:
                 data = conn.recv(1024)
                 data = data.decode("utf-8")
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                     print("No connection. Finishing...")
                     break
 
-                print(f"Received request {data}")
+                print(f"Received request `{data}`")
                 response = str(get_temperature(weather))
-                print(f"Sending response {response}")
+                print(f"Sending response `{response}`")
                 conn.sendall(response.encode("utf-8"))
