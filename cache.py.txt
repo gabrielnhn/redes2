@@ -58,7 +58,7 @@ while True:
 
         if (len(data_split) == 3) and (data_split[0] == 'req') and (data_split[1] == 'temp') and (data_split[2] in servers_name):
             
-            print(f'{datetime.now()} {cache_temp[data_split[2]][1]} {timedelta(seconds=MAX_EXPIRY_TIME_SEC)}')
+            # print(f'{datetime.now()} {cache_temp[data_split[2]][1]} {timedelta(seconds=MAX_EXPIRY_TIME_SEC)}')
             if (cache_temp[data_split[2]][0] == None) or (datetime.now() >= cache_temp[data_split[2]][1] + timedelta(seconds=MAX_EXPIRY_TIME_SEC)):
                 try:
                     server_sockets[servers_name.index(data_split[2])].sendall(f"temperature from {data_split[2]} server".encode("utf-8"))
