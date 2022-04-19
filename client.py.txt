@@ -9,6 +9,7 @@ HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65010  # The port used by the server cache
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     try:
         s.connect((HOST, PORT))
@@ -19,7 +20,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print(f"Connected to CACHE")
 
     while(True):
-        req = input(">>>")
+        req = input(">>> ")
 
         data = req.encode('UTF-8')
 

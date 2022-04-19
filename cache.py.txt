@@ -4,15 +4,24 @@ Esse programa faz parte do Trabalho de Redes de Computadores II
 __author__ = "Gabriel Hishida and Allan Cedric"
 
 import socket
+from datetime import datetime, timedelta
 
 HOST = "127.0.0.1"  # (localhost)
 PORT_TO_LISTEN = 65010
 PORTS = [64000, 64001, 64002]
 
+MAX_EXPIRY_TIME_SEC = 10
+
+
+servers_name = ['atacama', 'saara', 'antartida']
+
+cache_temp = {key: [None, None] for key in servers_name}
 
 server_sockets = []
 for port in PORTS:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
     try:
         s.connect((HOST, port))
         server_sockets.append(s)
@@ -33,38 +42,46 @@ while True:
 
     while(True):
         data = conn.recv(1024)
+        data = data.decode("utf-8")
         if not data:
             break
-        
 
-        try:
-            data = eval(data)
-            print(f"Received request {data}")
+        # try:
+        #     data = eval(data)
+        #     print(f"Received request {data}")
 
-        except:
-            pass
-        
+        # except:
+        #     pass
 
-        if data in range(len(server_sockets)):
+        print(f"Received request '{data}'")
+        data_split = data.split()
 
-            try:
-                server_sockets[data].sendall(f"temperature from server {data}".encode("utf-8"))
-            except BrokenPipeError:
-                conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
+        if (len(data_split) == 3) and (data_split[0] == 'req') and (data_split[1] == 'temp') and (data_split[2] in servers_name):
             
-            server_sockets[data].settimeout(1.0)
-            
-            try:
-                response = server_sockets[data].recv(1024)
+            print(f'{datetime.now()} {cache_temp[data_split[2]][1]} {timedelta(seconds=MAX_EXPIRY_TIME_SEC)}')
+            if (cache_temp[data_split[2]][0] == None) or (datetime.now() >= cache_temp[data_split[2]][1] + timedelta(seconds=MAX_EXPIRY_TIME_SEC)):
+                try:
+                    server_sockets[servers_name.index(data_split[2])].sendall(f"temperature from {data_split[2]} server".encode("utf-8"))
+                except BrokenPipeError:
+                    conn.sendall(f"err: Could not connect to {data_split[2]} server".encode("utf-8"))
+                
+                server_sockets[servers_name.index(data_split[2])].settimeout(1.0)
+                
+                try:
+                    response = server_sockets[servers_name.index(data_split[2])].recv(1024)
 
-                if response:
-                    temperature = eval(response)
-                    conn.sendall(str(temperature).encode("utf-8"))
-                else:
-                    conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
+                    if response:
+                        temperature = eval(response)
+                        cache_temp[data_split[2]][0] = temperature
+                        cache_temp[data_split[2]][1] = datetime.now()
+                        conn.sendall(str(temperature).encode("utf-8"))
+                    else:
+                        conn.sendall(f"err: Could not connect to {data_split[2]} server".encode("utf-8"))
 
-            except socket.timeout:
-                conn.sendall(f"err: Could not connect to server {data}".encode("utf-8"))
+                except socket.timeout:
+                    conn.sendall(f"err: Could not connect to {data_split[2]} server".encode("utf-8"))
+            else:
+                conn.sendall(str(cache_temp[data_split[2]][0]).encode("utf-8"))
         
         else:
             print(f"Requested server {data} does not exist")

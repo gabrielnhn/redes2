@@ -3,8 +3,6 @@ Esse programa faz parte do Trabalho de Redes de Computadores II
 """
 __author__ = "Gabriel Hishida and Allan Cedric"
 
-
-
 import random
 import socket
 import os
@@ -26,19 +24,24 @@ if __name__ == "__main__":
 
         if retval != 0: # First
             PORT = PORTS[0]
+            weather = "hot"
         else: # Third
             PORT = PORTS[2]
+            weather = "cold"
 
     else: # Second
         PORT = PORTS[1]
-
-    if random.randint(0, 1):
         weather = "hot"
-    else:
-        weather = "cold"
+
+    # if random.randint(0, 1):
+    #     weather = "hot"
+    # else:
+    #     weather = "cold"
 
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        
         # Internet, TCP
 
         s.bind((HOST, PORT))
@@ -47,7 +50,7 @@ if __name__ == "__main__":
         s.listen()
         conn, addr = s.accept()
         with conn:
-            print(f"Server {PORT} connected to CACHE on socket {addr}")
+            print(f">>> Server {PORT} connected to CACHE on socket {addr}")
             while True:
                 data = conn.recv(1024)
                 data = data.decode("utf-8")
