@@ -7,14 +7,15 @@ import random
 import socket
 import os
 
-HOST = "127.0.0.1"
-PORTS = [64000, 64001, 64002]
+HOST = "127.0.0.1" # The server's hostname or IP address
+PORTS = [64000, 64001, 64002] # Each port is used by one server
 
+# Generate a random temperature
 def get_temperature(weather):
     if weather == "hot":
-        return random.randint(25, 35)
+        return random.randint(40, 55)
     else:
-        return random.randint(-5, 10)
+        return random.randint(-50, -20)
 
 if __name__ == "__main__":
     retval = os.fork() # Get First + Second
@@ -38,12 +39,11 @@ if __name__ == "__main__":
     # else:
     #     weather = "cold"
 
-
+    # Create the server's socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         
         # Internet, TCP
-
         s.bind((HOST, PORT))
         
         # Wait for client
