@@ -16,10 +16,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     try:
         s.connect((HOST, PORT))
     except ConnectionRefusedError:
+        s.close()
         print("Error: Could not connect to CACHE server")
         exit()
     
-    print(f"Connected to CACHE")
+    print(f"Connected to CACHE server!")
+
+
+    print("Usage: >>> req temp [server_name]")
+    print(f"Available servers: 'atacama , 'antartida' and 'saara'")
+
 
     # Client input
     while True:
@@ -37,10 +43,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = data.decode("utf-8") # Decode data
             
             if data and (not data.startswith("err:")): # If it's not an error
-                data = eval(data)
+                # data = eval(data)
                 print(f"{req}: {data}")
             else:
                 print(data)
 
         except socket.timeout:
             print("No data was received from cache.")
+        except:
+            s.close()

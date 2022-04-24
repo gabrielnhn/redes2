@@ -10,7 +10,7 @@ HOST = "127.0.0.1"  # (localhost)
 PORT_TO_LISTEN = 65010
 PORTS = [64000, 64001, 64002]
 
-MAX_EXPIRY_TIME_SEC = 30
+EXPIRATION_TIME = 30
 
 servers_name = ['atacama', 'saara', 'antartida']
 
@@ -24,8 +24,10 @@ for port in PORTS:
     try:
         s.connect((HOST, port))
         server_sockets.append(s)
+        print(f"Connected to server {PORTS.index(port)}")
     
-    except ConnectionRefusedError: 
+    except ConnectionRefusedError:
+        s.close()
         print(f"Error: Could not connect to server {PORTS.index(port)}")
         exit()
 
@@ -62,32 +64,54 @@ while True:
             
             # print(f'{datetime.now()} {cache_temp[server_name][1]} {timedelta(seconds=MAX_EXPIRY_TIME_SEC)}')
             if ((cache_temp[server_name][0] == None) or 
-                (datetime.now() >= cache_temp[server_name][1] + timedelta(seconds=MAX_EXPIRY_TIME_SEC))):
+                (datetime.now() >= cache_temp[server_name][1] + timedelta(seconds=EXPIRATION_TIME))):
+
+                print(f"Temperature is not cached. Sending request...")
+
                 try:
-                    server_sockets[servers_name.index(server_name)].sendall(f"temperature from {server_name} server".encode("utf-8"))
+                    server_request = f"temperature from {server_name} server".encode("utf-8")
+                    server_sockets[servers_name.index(server_name)].sendall(server_request)
+                    
                 except BrokenPipeError:
+                    listen_sock.close()
+                    for s in server_sockets:
+                        s.close()
                     conn.sendall(f"err: Could not connect to {server_name} server".encode("utf-8"))
+                except:
+                    listen_sock.close()
+                    for s in server_sockets:
+                        s.close()
                 
                 server_sockets[servers_name.index(server_name)].settimeout(1.0)
                 
                 try:
                     response = server_sockets[servers_name.index(server_name)].recv(1024)
+                    response = response.decode("utf-8")
+                    print(f"Got response {response}")
 
                     if response:
-                        temperature = eval(response)
+                        temperature = response
                         cache_temp[server_name][0] = temperature
                         cache_temp[server_name][1] = datetime.now()
+
+                        print(f"Sending temperature from server {cache_temp[server_name][0]}")
                         conn.sendall(str(temperature).encode("utf-8"))
                     else:
                         conn.sendall(f"err: Could not connect to {server_name} server".encode("utf-8"))
 
                 except socket.timeout:
                     conn.sendall(f"err: Could not connect to {server_name} server".encode("utf-8"))
+                except:
+                    listen_sock.close()
+                    for s in server_sockets:
+                        s.close()
+
             else:
+                print(f"Sending cached temperature {cache_temp[server_name][0]}")
                 conn.sendall(str(cache_temp[server_name][0]).encode("utf-8"))
         
         else:
-            print(f"Requested server {data} does not exist")
-            conn.sendall(f"err: Server {data} does not exist".encode("utf-8"))
+            print(f"Command unrecognized.")
+            conn.sendall(f"Command unrecognized.")
 
 

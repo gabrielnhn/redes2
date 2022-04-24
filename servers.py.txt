@@ -59,6 +59,6 @@ if __name__ == "__main__":
                     break
 
                 print(f"Received request `{data}`")
-                response = str(get_temperature(weather))
+                response = str(get_temperature(weather)) + "°C"
                 print(f"Sending response `{response}`")
                 conn.sendall(response.encode("utf-8"))
