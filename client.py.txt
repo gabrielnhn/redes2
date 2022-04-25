@@ -24,9 +24,8 @@ def main():
         
         print(f"Connected to CACHE server!")
 
-
         print("Usage: >>> req temp [server_name]")
-        print(f"Available servers: 'atacama , 'antartida' and 'saara'")
+        print(f"Available servers: 'atacama' , 'saara' and 'antartida'")
 
 
         # Client input
@@ -43,19 +42,11 @@ def main():
             try:
                 data = s.recv(1024) # Received data from Cache Server (buffer 1024 bytes)
                 data = data.decode("utf-8") # Decode data
-                
-                if data and (not data.startswith("err:")): # If it's not an error
-                    # data = eval(data)
-                    print(f"{req}: {data}")
-                else:
-                    print(data)
-
+                print(data)
             except socket.timeout:
                 print("No data was received from cache.")
             except:
                 s.close()
-
-
 
 if __name__ == '__main__':
     main()

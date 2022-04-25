@@ -13,9 +13,9 @@ PORTS = [64000, 64001, 64002] # Each port is used by one server
 # Generate a random temperature
 def get_temperature(weather):
     if weather == "hot":
-        return random.randint(40, 55)
+        return random.randint(30, 50)
     else:
-        return random.randint(-50, -20)
+        return random.randint(-40, -20)
 
 if __name__ == "__main__":
     retval = os.fork() # Get First + Second
@@ -34,11 +34,6 @@ if __name__ == "__main__":
         PORT = PORTS[1]
         weather = "hot"
 
-    # if random.randint(0, 1):
-    #     weather = "hot"
-    # else:
-    #     weather = "cold"
-
     # Create the server's socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -55,10 +50,11 @@ if __name__ == "__main__":
                 data = conn.recv(1024)
                 data = data.decode("utf-8")
                 if not data:
+                    s.close()
                     print("No connection. Finishing...")
                     break
 
-                print(f"Received request `{data}`")
+                print(f"Received request '{data}'")
                 response = str(get_temperature(weather)) + "°C"
-                print(f"Sending response `{response}`")
+                print(f"Sending response '{response}'")
                 conn.sendall(response.encode("utf-8"))

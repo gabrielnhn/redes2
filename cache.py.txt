@@ -11,16 +11,15 @@ HOST = "127.0.0.1"  # (localhost)
 PORT_TO_LISTEN = 65010
 PORTS = [64000, 64001, 64002]
 
-EXPIRATION_TIME = 30
+EXPIRATION_TIME_SEC = 30
 
 server_sockets = []
-
 
 def main():
 
     servers_name = ['atacama', 'saara', 'antartida']
 
-    cache_temp = {key: [None, None] for key in servers_name}
+    cache_temp = {key: [None, None] for key in servers_name} # Initialize cache
 
     for port in PORTS:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,11 +28,11 @@ def main():
         try:
             s.connect((HOST, port))
             server_sockets.append(s)
-            print(f"Connected to server {PORTS.index(port)}", file=sys.stderr)
+            print(f"Connected to {servers_name[PORTS.index(port)]} server", file=sys.stderr)
         
         except ConnectionRefusedError:
             s.close()
-            print(f"Error: Could not connect to server {PORTS.index(port)}", file=sys.stderr)
+            print(f"Error: Could not connect to {servers_name[PORTS.index(port)]} server", file=sys.stderr)
             exit()
 
 
@@ -51,14 +50,10 @@ def main():
             data = conn.recv(1024)
             data = data.decode("utf-8")
             if not data:
+                listen_sock.close()
+                for s in server_sockets:
+                    s.close()
                 break
-
-            # try:
-            #     data = eval(data)
-            #     print(f"Received request {data}", file=sys.stderr)
-
-            # except:
-            #     pass
 
             print("#"*20)
             print(f"Received request '{data}'", file=sys.stderr)
@@ -74,25 +69,26 @@ def main():
                 print(f"-> Current request: {now}")
 
                 if ((cache_temp[server_name][0] == None) or 
-                    (now >= cache_temp[server_name][1] + timedelta(seconds=EXPIRATION_TIME))):
+                    (now >= cache_temp[server_name][1] + timedelta(seconds=EXPIRATION_TIME_SEC))):
 
                     print(f"Temperature is not cached. Sending request...", file=sys.stderr)
 
                     try:
-                        server_request = f"temperature from {server_name} server".encode("utf-8")
+                        server_request = data.encode("utf-8")
                         server_sockets[servers_name.index(server_name)].sendall(server_request)
                         
                     except BrokenPipeError:
+                        conn.sendall(f"err: Could not connect to {server_name} server".encode("utf-8"))
                         listen_sock.close()
                         for s in server_sockets:
                             s.close()
-                        conn.sendall(f"err: Could not connect to {server_name} server".encode("utf-8"))
+
                     except:
                         listen_sock.close()
                         for s in server_sockets:
                             s.close()
                     
-                    server_sockets[servers_name.index(server_name)].settimeout(1.0)
+                    server_sockets[servers_name.index(server_name)].settimeout(1.0) # Timeout (1 second)
                     
                     try:
                         response = server_sockets[servers_name.index(server_name)].recv(1024)
@@ -104,7 +100,7 @@ def main():
                             cache_temp[server_name][0] = temperature
                             cache_temp[server_name][1] = datetime.now()
 
-                            print(f"Sending temperature from server {cache_temp[server_name][0]}", file=sys.stderr)
+                            print(f"Sending temperature from {server_name} server", file=sys.stderr)
                             conn.sendall(str(temperature).encode("utf-8"))
                         else:
                             conn.sendall(f"err: Could not connect to {server_name} server".encode("utf-8"))
@@ -121,8 +117,8 @@ def main():
                     conn.sendall(str(cache_temp[server_name][0]).encode("utf-8"))
             
             else:
-                print(f"Command unrecognized.", file=sys.stderr)
-                conn.sendall(f"Command unrecognized.".encode("utf-8"))
+                print(f"Command unrecognized", file=sys.stderr)
+                conn.sendall(f"Command unrecognized".encode("utf-8"))
 
 
 if __name__ == '__main__':
