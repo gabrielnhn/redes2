@@ -1,0 +1,67 @@
+Connected to atacama server
+Connected to saara server
+Connected to antartida server
+Connected to CLIENT by ('127.0.0.1', 49802)
+####################
+Received request 'req temp atacama'
+-> Last requested: None
+-> Current request: 2022-04-24 23:11:37.859273
+Temperature is not cached. Sending request...
+Got response 48°C
+Sending temperature from atacama server
+####################
+Received request 'req temp saara'
+-> Last requested: None
+-> Current request: 2022-04-24 23:11:42.722957
+Temperature is not cached. Sending request...
+Got response 37°C
+Sending temperature from saara server
+####################
+Received request 'req temp antartida'
+-> Last requested: None
+-> Current request: 2022-04-24 23:11:48.795281
+Temperature is not cached. Sending request...
+Got response -32°C
+Sending temperature from antartida server
+####################
+Received request 'req temp antartida'
+-> Last requested: 2022-04-24 23:11:48.795501
+-> Current request: 2022-04-24 23:11:53.962658
+Sending cached temperature -32°C
+####################
+Received request 'req temp saara'
+-> Last requested: 2022-04-24 23:11:42.723175
+-> Current request: 2022-04-24 23:11:58.323055
+Sending cached temperature 37°C
+####################
+Received request 'req temp atacama'
+-> Last requested: 2022-04-24 23:11:37.859563
+-> Current request: 2022-04-24 23:12:07.507113
+Sending cached temperature 48°C
+####################
+Received request 'req temp atacama'
+-> Last requested: 2022-04-24 23:11:37.859563
+-> Current request: 2022-04-24 23:12:16.330763
+Temperature is not cached. Sending request...
+Got response 41°C
+Sending temperature from atacama server
+####################
+Received request 'req temp saara'
+-> Last requested: 2022-04-24 23:11:42.723175
+-> Current request: 2022-04-24 23:12:20.394863
+Temperature is not cached. Sending request...
+Got response 36°C
+Sending temperature from saara server
+####################
+Received request 'req temp antartida'
+-> Last requested: 2022-04-24 23:11:48.795501
+-> Current request: 2022-04-24 23:12:25.226819
+Temperature is not cached. Sending request...
+Got response -23°C
+Sending temperature from antartida server
+####################
+Received request 'req temp canada'
+Command unrecognized
+####################
+Received request 'request temperature saara'
+Command unrecognized

@@ -1,0 +1,26 @@
+Connected to CACHE server!
+Usage: >>> req temp [server_name]
+Available servers: 'atacama' , 'saara' and 'antartida'
+>>> req temp atacama
+48°C
+>>> req temp saara
+37°C
+>>> req temp antartida
+-32°C
+>>> req temp antartida
+-32°C
+>>> req temp saara
+37°C
+>>> req temp atacama
+48°C
+>>> req temp atacama
+41°C
+>>> req temp saara
+36°C
+>>> req temp antartida
+-23°C
+>>> req temp canada
+Command unrecognized
+>>> request temperature saara
+Command unrecognized
+>>> 

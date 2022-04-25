@@ -1,0 +1,15 @@
+>>> Server 64000 connected to CACHE on socket ('127.0.0.1', 53124)
+>>> Server 64001 connected to CACHE on socket ('127.0.0.1', 37738)
+>>> Server 64002 connected to CACHE on socket ('127.0.0.1', 47890)
+Received request 'req temp atacama'
+Sending response '48°C'
+Received request 'req temp saara'
+Sending response '37°C'
+Received request 'req temp antartida'
+Sending response '-32°C'
+Received request 'req temp atacama'
+Sending response '41°C'
+Received request 'req temp saara'
+Sending response '36°C'
+Received request 'req temp antartida'
+Sending response '-23°C'

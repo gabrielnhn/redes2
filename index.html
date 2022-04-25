@@ -42,11 +42,38 @@
         <li><a href="./cache.py.txt" target="_blank">cache.py</a> (servidor cache)</li>
         <li><a href="./servers.py.txt" target="_blank">servers.py</a> (servidores)</li>
     </ul>
-    
-    <h2>Resultados</h2>
     <p>
-        Agora será tratado de alguns exemplos para demonstrar o funcionamento do sistema.
+        Para simplificar o desenvolvimento do trabalho, foi utilizado 
+        a <b>interface de rede loopback (127.0.0.1)</b> e IPC (Inter Process Comunication) para
+        atender o programa cliente com o servidor cache, e o servidor cache com os 3 servidores de temperatura.
     </p>
+    
+    <h2>Funcionamento</h2>
+    <p>
+        O programa dos <a href="./servers.py.txt" target="_blank">servidores</a> são instanciados com um <b>fork</b> a partir 
+        do programa do primeiro servidor. E são responsáveis por se conectar e enviar dados de temperatura a um servidor cache. 
+    </p>
+    <p>
+        O programa do <a href="./cache.py.txt" target="_blank">servidor cache</a> 
+        é composto por entradas com prazo de validade, e a estrutura para modelar a tabela
+        cache é do tipo <b>dicionário</b> (tabela hash). Cada entrada é indexada com o nome de um servidor, e nessa entrada temos dois tipos de 
+        dados: temperatura (C°) e selo temporal do dado de temperatura (timestamp).
+    </p>
+    <p>
+        O programa <a href="./client.py.txt" target="_blank">cliente</a> é responsável pela 
+        interface de comandos que o usuário dispõe para obter dados de 3 servidores de temperatura. Ele interage
+        diretamente com o servidor cache para obter esses dados através de requisições <b>TCP/IP</b>
+    </p>
+    <figure>
+        <img src="./tabelacache_ex.png" alt="Exemplo da estrutura da tabela cache" width="30%" height="30%"/>
+        <figcaption>Fig.1 - Exemplo da estrutura da tabela cache</figcaption>
+    </figure>
 
+    <h2>Logs de execução</h2>
+    <ul>
+        <li><a href="./log_client.txt" target="_blank">log_client</a> (interface/entrada do cliente)</li>
+        <li><a href="./log_cache.txt" target="_blank">log_cache</a> (servidor cache)</li>
+        <li><a href="./log_servers.txt" target="_blank">log_servers</a> (servidores)</li>
+    </ul>
 </body>
 </html>
