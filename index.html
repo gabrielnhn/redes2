@@ -50,20 +50,22 @@
     
     <h2>Funcionamento</h2>
     <p>
-        O programa dos <a href="./servers.py.txt" target="_blank">servidores</a> são instanciados com um <b>fork</b> a partir 
-        do programa do primeiro servidor. E são responsáveis por se conectar e enviar dados de temperatura a um servidor cache. 
+        O programa <a href="./client.py.txt" target="_blank">cliente</a> é responsável pela 
+        interface de comandos que o usuário dispõe para obter dados de 3 servidores de temperatura. Ele interage
+        diretamente com o servidor cache para obter esses dados através de requisições <b>TCP/IP</b>. O comando
+        para requisitar uma temperatura: <b>req temp &lt;server_name&gt;</b>
     </p>
     <p>
         O programa do <a href="./cache.py.txt" target="_blank">servidor cache</a> 
         é composto por entradas com prazo de validade, e a estrutura para modelar a tabela
         cache é do tipo <b>dicionário</b> (tabela hash). Cada entrada é indexada com o nome de um servidor, e nessa entrada temos dois tipos de 
-        dados: temperatura (C°) e selo temporal do dado de temperatura (timestamp).
+        dados: temperatura (C°) e um selo temporal desse dado de temperatura (timestamp).
     </p>
     <p>
-        O programa <a href="./client.py.txt" target="_blank">cliente</a> é responsável pela 
-        interface de comandos que o usuário dispõe para obter dados de 3 servidores de temperatura. Ele interage
-        diretamente com o servidor cache para obter esses dados através de requisições <b>TCP/IP</b>
+        O programa dos <a href="./servers.py.txt" target="_blank">servidores</a> são instanciados com um <b>fork</b> a partir 
+        do programa do primeiro servidor. E são responsáveis por se conectar e enviar dados de temperatura a um servidor cache. 
     </p>
+
     <figure>
         <img src="./tabelacache_ex.png" alt="Exemplo da estrutura da tabela cache" width="30%" height="30%"/>
         <figcaption>Fig.1 - Exemplo da estrutura da tabela cache</figcaption>
