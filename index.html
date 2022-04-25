@@ -61,9 +61,9 @@
     </p>
     <p>
         O programa do <a href="./cache.py.txt" target="_blank">servidor cache</a> 
-        é composto por entradas com prazo de validade, e a estrutura para modelar a tabela
-        cache é do tipo <b>dicionário</b> (tabela hash). Cada entrada é indexada com o nome de um servidor, e nessa entrada temos dois tipos de 
-        dados: temperatura (C°) e um selo temporal desse dado de temperatura (timestamp).
+        é composto por uma tabela cache com entradas que possuem um prazo de validade, e a estrutura para modelar essa tabela
+        é do tipo <b>dicionário</b> (tabela hash). Cada entrada é indexada com o nome de um servidor, e nessa entrada temos dois tipos de 
+        dados: temperatura (°C) e um selo temporal inicial desse dado de temperatura (timestamp).
     </p>
     <p>
         O programa dos <a href="./servers.py.txt" target="_blank">servidores</a> são instanciados com um <b>fork</b> a partir 
